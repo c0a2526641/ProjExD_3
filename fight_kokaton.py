@@ -175,7 +175,7 @@ def main():
                 if beam is not None:
                     if beam.rct.colliderect(bomb.rct): #練習2
                         beam = None
-                        bomb[i] = None 
+                        bombs[i] = None 
                         bird.change_img(6, screen)
                         pg.display.update()
                         time.sleep(1)
