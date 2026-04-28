@@ -155,6 +155,20 @@ class Score:
         self.img = self.fonto.render(f"Score: {self.score}", 0, self.color)
         screen.blit(self.img, self.rct)
 
+    
+class Explosion:
+    """追加機能3：爆発エフェクト"""
+    def __init__(self, obj: Bomb):
+        img = pg.image.load("fig/explosion.gif")
+        self.imgs = [img, pg.transform.flip(img, True, True)]
+        self.rct = img.get_rect()
+        self.rct.center = obj.rct.center
+        self.life = 50  
+
+    def update(self, screen: pg.Surface):
+        self.life -= 1
+        screen.blit(self.imgs[self.life // 10 % 2], self.rct)
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -166,7 +180,8 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     score = Score() #追加機能１
-    beams = []
+    beams = [] #追加機能2
+    exps = [] #追加機能3
     
     while True:
         for event in pg.event.get():
@@ -174,7 +189,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
-                beams.append(Beam(bird))
+                beams.append(Beam(bird)) #追加機能2
 
         screen.blit(bg_img, [0, 0])
         
@@ -192,15 +207,18 @@ def main():
                 if bomb is not None:
                     if beam is not None:
                         if beam.rct.colliderect(bomb.rct): #練習2
+                            exps.append(Explosion(bomb))
                             beams[j] = None
                             bombs[i] = None
                             score.score += 1
                             bird.change_img(6, screen)
                             pg.display.update()
-                            time.sleep(1)
+                            #time.sleep(1)
 
         bombs = [bomb for bomb in bombs if bomb is not None]
         beams = [b for b in beams if b is not None and check_bound(b.rct)[0]]
+        exps = [e for e in exps if e.life > 0]
+
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -208,6 +226,9 @@ def main():
             beam.update(screen)
         for bomb in bombs:
             bomb.update(screen)
+        for exp in exps:
+            exp.update(screen)
+
         score.update(screen)
         pg.display.update()
         tmr += 1
