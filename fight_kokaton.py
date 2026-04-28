@@ -186,7 +186,7 @@ def main():
         bird.update(key_lst, screen)
         if beam is not None:
             beam.update(screen)
-        if bomb in bombs:
+        for bomb in bombs:
             bomb.update(screen)
         pg.display.update()
         tmr += 1
