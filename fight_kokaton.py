@@ -159,7 +159,7 @@ class Score:
 class Explosion:
     """追加機能3：爆発エフェクト"""
     def __init__(self, obj: Bomb):
-        img = pg.image.load("fig/explosion.gif")
+        img = pg.image.load("fig/explosion.gif") #ベームが当たった時の爆発画像
         self.imgs = [img, pg.transform.flip(img, True, True)]
         self.rct = img.get_rect()
         self.rct.center = obj.rct.center
@@ -218,7 +218,6 @@ def main():
         bombs = [bomb for bomb in bombs if bomb is not None]
         beams = [b for b in beams if b is not None and check_bound(b.rct)[0]]
         exps = [e for e in exps if e.life > 0]
-
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
